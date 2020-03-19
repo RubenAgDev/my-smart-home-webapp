@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';
 
 import Home from './pages/Home/Home';
 import SignIn from './pages/SignIn/SignIn';
+import SignOut from './pages/SignOut/SignOut';
 
 import './App.css';
 
@@ -29,6 +30,9 @@ function App() {
         <Switch>
           <Route path="/sign-in">
             <SignIn />
+          </Route>
+          <Route path="/sign-out">
+            <SignOut />
           </Route>
           <PrivateRoute path="/">
             <Home />

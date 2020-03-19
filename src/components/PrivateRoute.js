@@ -1,18 +1,30 @@
 import React from 'react';
 import { Route, withRouter } from 'react-router-dom';
 
-const isSignedIn = false;
+import StorageService from '../services/Storage';
 
 function PrivateRoute({ children, history, path}) {
-  if (!isSignedIn) {
-    history.push("/sign-in");
-    return null;
-  }
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const onLoad = async () => {
+      const isUserLoggedIn = await StorageService.getIsUserLoggedIn();
+
+      if (!isUserLoggedIn) {
+        history.push("/sign-in");
+        return null;
+      }
+
+      setIsLoading(false);
+    };
+    
+    onLoad();
+  });  
 
   return (
-    <Route path={path}>
-      {children}
-    </Route>
+      <Route path={path}>
+        { isLoading ? null : children}
+      </Route>
   );
 }
 

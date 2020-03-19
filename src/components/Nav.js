@@ -37,6 +37,7 @@ function Nav({value, onChange}) {
         <Tabs value={value} onChange={onChange} aria-label="navigation tabs">
           <LinkTab label="Home" to="/" {...a11yProps(0)} />
           <LinkTab label="Sign In" to="/sign-in" {...a11yProps(1)} />
+          <LinkTab label="Sign Out" to="/sign-out" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
     </div>
