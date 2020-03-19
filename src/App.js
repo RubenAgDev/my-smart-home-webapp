@@ -1,25 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
+
+import Nav from './components/Nav';
+import PrivateRoute from './components/PrivateRoute';
+
+import Home from './pages/Home/Home';
+import SignIn from './pages/SignIn/SignIn';
+
 import './App.css';
 
 function App() {
+  const [currentNavValue, setCurrentNavValue] = React.useState(0);
+
+  const handleNavChange = (event, newValue) => {
+    setCurrentNavValue(newValue);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <main>
+        <Nav
+          value={currentNavValue}
+          onChange={handleNavChange} />
+        <Switch>
+          <Route path="/sign-in">
+            <SignIn />
+          </Route>
+          <PrivateRoute path="/">
+            <Home />
+          </PrivateRoute>
+        </Switch>
+      </main>
+    </Router>
   );
 }
 
