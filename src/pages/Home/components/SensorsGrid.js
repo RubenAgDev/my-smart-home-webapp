@@ -6,7 +6,7 @@ import SensorCard from './SensorCard';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    margin: '5em 0 0 0',
+    margin: '2em 0 0 0',
   }
 }));
 
