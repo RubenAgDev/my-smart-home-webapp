@@ -1,18 +1,28 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-
-import StorageService from '../../services/Storage';
+import LoginForm from './components/LoginForm';
 
 function SignIn() {
-  const handleOnClick = () => {
-    StorageService.setUserLoggedIn();
+  const [formValues, setFormValues] = React.useState({
+    email: '',
+    password: ''
+  });
+
+  const handleFormChange = event => {
+    setFormValues({
+      ...formValues,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleFormSubmit = () => {
+    console.log(formValues);
   };
 
   return (
-    <>
-      <h1>Please Sign In</h1>
-      <Button color="primary" onClick={handleOnClick}>Sign In</Button>
-    </>
+    <LoginForm
+      onChange={handleFormChange}
+      onSubmit={handleFormSubmit}
+      values={formValues} />
   );
 }
 
