@@ -10,11 +10,11 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    maxWidth: 275,
   },
 });
 
-function SensorCard() {
+function SensorCard({data}) {
   const classes = useStyles();
 
   return (
@@ -29,10 +29,13 @@ function SensorCard() {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            Laundry Room Sensor
+            {data.name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            Some description here
+            Last reported at: {data.last_reported_at}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            Installed at: {data.installed_at}
           </Typography>
         </CardContent>
       </CardActionArea>

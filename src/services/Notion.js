@@ -1,10 +1,10 @@
 const Notion = {};
 
-const BASE_URL = '';
+const BASE_URL = '/api';
 
 let authToken = '';
 
-Notion.signIn = async (email, password) => {
+Notion.signIn = async ({email, password}) => {
   const response = await fetch(`${BASE_URL}/users/sign_in`, {
     method: 'POST',
     headers: {
@@ -18,14 +18,24 @@ Notion.signIn = async (email, password) => {
     }),
   });
 
-  const jsonData = await response.json();
-  authToken = jsonData.session.authentication_token;
+  if (response.ok) {
+    const jsonData = await response.json();
+    authToken = jsonData.session.authentication_token;
+    console.log(authToken);
+  } else {
+    // TODO: Handle error message from API response
+  }
 
-  return true;
+  
+  return response.ok;
 };
 
 Notion.signOut = async () => {
-  await fetch(`${BASE_URL}/users/sign_out`, {
+  if (!authToken) {
+    return false;
+  }
+
+  const response = await fetch(`${BASE_URL}/users/sign_out`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -33,7 +43,13 @@ Notion.signOut = async () => {
     }
   });
 
-  return true;
+  if (response.ok) {
+    authToken = '';
+  } else {
+    // TODO: Handle error message from API response
+  }
+
+  return response.ok;
 }
 
 Notion.getSensors = async () => {

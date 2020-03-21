@@ -23,8 +23,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function LoginForm({values, onChange, onSubmit}) {
+function LoginForm({values, onChange, onSubmit, errorMessage}) {
   const classes = useStyles();
+  const hasError = !!errorMessage;
 
   return (
     <div className={classes.root}>
@@ -36,7 +37,8 @@ function LoginForm({values, onChange, onSubmit}) {
             label="Email"
             value={values.email}
             onChange={onChange}
-            helperText="We will never share your email" />
+            helperText={hasError ? "" : "We will never share your email"}
+            error={hasError} />
         </div>
         <div>
           <TextField
@@ -46,6 +48,8 @@ function LoginForm({values, onChange, onSubmit}) {
             type="password"
             value={values.password}
             onChange={onChange}
+            error={hasError}
+            helperText={hasError ? errorMessage : ""}
         />
         </div>
         <div>

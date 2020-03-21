@@ -1,25 +1,34 @@
 import React from 'react';
-import SensorCard from './components/SensorCard';
+import SensorsGrid from './components/SensorsGrid';
 
-function Home({handler}) {
-  const [sensors, setSensors] = React.useState([]);
+import NotionService from '../../services/Notion';
 
-  // React.useEffect(() => {
-  //   const onLoad = async () => {
-  //     const jsonData = await handler();
-  //     console.log(jsonData);
-  //   };
+function Home() {
+  const [sensors, setSensors] = React.useState(null);
+
+  React.useEffect(() => {
+    const onLoad = async () => {
+      try {
+        const jsonData = await NotionService.getSensors();
+        if (jsonData.sensors) {
+          setSensors(jsonData.sensors);
+        } else {
+          // TODO: Handle error
+          console.log(jsonData);
+        }
+      } catch(error) {
+        // TODO: Handle error
+        console.log(error);
+      }
+    };
     
-  //   onLoad();
-  // });
+    if (!sensors) {
+      onLoad();
+    }
+  });
   
   return (
-    <>
-      <h1>Welcome Home!</h1>
-      {sensors.map((sensor, index) => {
-        return <SensorCard key={`sensor-card-${index}`} sensor={sensor} />
-      })}
-    </>
+    <SensorsGrid sensors={sensors} />
   );
 }
 

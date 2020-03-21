@@ -2,18 +2,17 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Nav from './components/Nav';
-import PrivateRoute from './components/PrivateRoute';
 
 import Home from './pages/Home/Home';
 import SignIn from './pages/SignIn/SignIn';
 import SignOut from './pages/SignOut/SignOut';
-
-import NotionService from './services/Notion';
+import ErrorPage from './pages/Error/Error';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -21,13 +20,30 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function App() {
+function App({history}) {
   const classes = useStyles();
 
   const [currentNavValue, setCurrentNavValue] = React.useState(0);
+  const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(false);
 
   const handleNavChange = (event, newValue) => {
     setCurrentNavValue(newValue);
+  };
+
+  const handleSignIn = (success) => {
+    setIsUserLoggedIn(success);
+  };
+
+  const handleSignOut = () => {
+    setIsUserLoggedIn(false);
+  }
+
+  const PrivateRoute = ({ children, path}) => {
+    return (
+        <Route path={path}>
+          {isUserLoggedIn ? children : <Redirect to="/sign-in" />}
+        </Route>
+    );
   };
 
   return (
@@ -38,13 +54,16 @@ function App() {
       <main className={classes.main}>
         <Switch>
           <Route path="/sign-in">
-            <SignIn handler={NotionService.signIn} />
+            {isUserLoggedIn ? <Redirect to="/" /> : <SignIn onSignIn={handleSignIn}  />}
           </Route>
           <Route path="/sign-out">
-            <SignOut handler={NotionService.signOut} />
+            <SignOut onSignOut={handleSignOut} />
+          </Route>
+          <Route path="/error">
+            <ErrorPage />
           </Route>
           <PrivateRoute path="/">
-            <Home handler={NotionService.getSensors} />
+            <Home />
           </PrivateRoute>
         </Switch>
       </main>
