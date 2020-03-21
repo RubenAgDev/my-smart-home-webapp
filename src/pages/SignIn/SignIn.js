@@ -1,7 +1,7 @@
 import React from 'react';
 import LoginForm from './components/LoginForm';
 
-function SignIn() {
+function SignIn({handler}) {
   const [formValues, setFormValues] = React.useState({
     email: '',
     password: ''
@@ -15,7 +15,7 @@ function SignIn() {
   };
 
   const handleFormSubmit = () => {
-    console.log(formValues);
+    handler(formValues);
   };
 
   return (

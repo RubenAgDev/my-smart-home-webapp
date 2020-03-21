@@ -13,6 +13,8 @@ import Home from './pages/Home/Home';
 import SignIn from './pages/SignIn/SignIn';
 import SignOut from './pages/SignOut/SignOut';
 
+import NotionService from './services/Notion';
+
 const useStyles = makeStyles(theme => ({
   main: {
     padding: "0 2em"
@@ -36,13 +38,13 @@ function App() {
       <main className={classes.main}>
         <Switch>
           <Route path="/sign-in">
-            <SignIn />
+            <SignIn handler={NotionService.signIn} />
           </Route>
           <Route path="/sign-out">
-            <SignOut />
+            <SignOut handler={NotionService.signOut} />
           </Route>
           <PrivateRoute path="/">
-            <Home />
+            <Home handler={NotionService.getSensors} />
           </PrivateRoute>
         </Switch>
       </main>

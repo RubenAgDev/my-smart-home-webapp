@@ -1,19 +1,18 @@
 import React from 'react';
-import StorageService from '../../services/Storage';
 
-function SignOut() {
+function SignOut({handler}) {
   React.useEffect(() => {
     const onLoad = async () => {
-      await StorageService.setUserLoggedOut();
+      await handler();
     };
     
     onLoad();
   });
 
   return (
-    <div>
+    <h3>
         You have been signed out!
-    </div>
+    </h3>
   );
 }
 
