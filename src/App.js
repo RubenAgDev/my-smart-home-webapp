@@ -5,7 +5,6 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 
 import Nav from './components/Nav';
 
@@ -14,17 +13,10 @@ import SignIn from './pages/SignIn/SignIn';
 import SignOut from './pages/SignOut/SignOut';
 import ErrorPage from './pages/Error/Error';
 
-const useStyles = makeStyles(theme => ({
-  main: {
-    padding: "0 2em"
-  },
-}))
-
-function App({history}) {
-  const classes = useStyles();
-
+function App() {
   const [currentNavValue, setCurrentNavValue] = React.useState(0);
-  const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(false);
+  // TODO: Setting token as env var until auth token is handle in the app state
+  const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(true);
 
   const handleNavChange = (event, newValue) => {
     setCurrentNavValue(newValue);
@@ -50,8 +42,9 @@ function App({history}) {
     <Router>
       <Nav
         value={currentNavValue}
-        onChange={handleNavChange} />
-      <main className={classes.main}>
+        onChange={handleNavChange}
+      />
+      <main>
         <Switch>
           <Route path="/sign-in">
             {isUserLoggedIn ? <Redirect to="/" /> : <SignIn onSignIn={handleSignIn}  />}
