@@ -2,9 +2,14 @@ const Notion = {};
 
 const BASE_URL = '/api';
 
-let authToken = '';
+let authToken = process.env.REACT_APP_AUTH_TOKEN || '';
 
 Notion.signIn = async ({email, password}) => {
+  // TODO: Remove when auth token is handle in the app state
+  if (authToken !== '') {
+    return true;
+  }
+  //
   const response = await fetch(`${BASE_URL}/users/sign_in`, {
     method: 'POST',
     headers: {
@@ -63,5 +68,17 @@ Notion.getSensors = async () => {
 
   return await response.json();
 };
+
+Notion.getSensorTasks = async (sensorId) => {
+  const response = await fetch(`${BASE_URL}/sensors/${sensorId}/tasks`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${authToken}`
+    }
+  });
+
+  return await response.json();
+}
 
 export default Notion;

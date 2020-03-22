@@ -8,10 +8,25 @@ function Home() {
 
   React.useEffect(() => {
     const onLoad = async () => {
+      let sensors = [];
       try {
         const jsonData = await NotionService.getSensors();
+
         if (jsonData.sensors) {
-          setSensors(jsonData.sensors);
+          for(let sensorIndex = 0; sensorIndex < jsonData.sensors.length; sensorIndex++) {
+            const sensor = jsonData.sensors[sensorIndex];
+            const jsonTasks = await NotionService.getSensorTasks(sensor.id);
+            
+            if (jsonTasks.tasks) {
+              sensors.push({
+                id: sensor.id,
+                name: sensor.name,
+                tasks: jsonTasks.tasks
+              });
+            }
+          }
+
+          setSensors(sensors);
         } else {
           // TODO: Handle error
           console.log(jsonData);
