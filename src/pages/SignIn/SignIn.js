@@ -3,13 +3,14 @@ import LoginForm from './components/LoginForm';
 
 import NotionService from '../../services/Notion';
 
-function SignIn({onSignIn}) {
-  const [formValues, setFormValues] = React.useState({
-    email: '',
-    password: ''
-  });
+const initialState ={
+  email: '',
+  password: '',
+  error: '',
+};
 
-  const [errorMessage, setErrorMessage] = React.useState(null);
+function SignIn({onSignIn}) {
+  const [formValues, setFormValues] = React.useState(initialState);
 
   const handleFormChange = event => {
     setFormValues({
@@ -18,6 +19,13 @@ function SignIn({onSignIn}) {
     });
   };
 
+  const handleOnError = (error) => {
+    setFormValues({
+      ...formValues,
+      error,
+    })
+  }
+
   const handleFormSubmit = async () => {
     try {
       const success = await NotionService.signIn(formValues);
@@ -25,10 +33,10 @@ function SignIn({onSignIn}) {
       if (success) {
         onSignIn(true);
       } else {
-        setErrorMessage('Invalid email and/or password');
+        handleOnError('Invalid email and/or password');
       }
     } catch (error) {
-      setErrorMessage(error.message);
+      handleOnError(error.message);
     }
   };
 
@@ -36,8 +44,7 @@ function SignIn({onSignIn}) {
     <LoginForm
       onChange={handleFormChange}
       onSubmit={handleFormSubmit}
-      values={formValues}
-      errorMessage={errorMessage} />
+      values={formValues} />
   );
 }
 

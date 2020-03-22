@@ -23,9 +23,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function LoginForm({values, onChange, onSubmit, errorMessage}) {
+function LoginForm({values, onChange, onSubmit}) {
   const classes = useStyles();
-  const hasError = !!errorMessage;
+  const hasError = !!values.error;
 
   return (
     <div className={classes.root}>
@@ -49,7 +49,7 @@ function LoginForm({values, onChange, onSubmit, errorMessage}) {
             value={values.password}
             onChange={onChange}
             error={hasError}
-            helperText={hasError ? errorMessage : ""}
+            helperText={hasError ? values.error : ""}
         />
         </div>
         <div>
