@@ -5,11 +5,8 @@ const BASE_URL = '/api';
 let authToken = process.env.REACT_APP_AUTH_TOKEN || '';
 
 Notion.signIn = async ({email, password}) => {
-  // TODO: Remove when auth token is handle in the app state
-  if (authToken !== '') {
-    return true;
-  }
-  //
+  let name = '';
+
   const response = await fetch(`${BASE_URL}/users/sign_in`, {
     method: 'POST',
     headers: {
@@ -26,13 +23,21 @@ Notion.signIn = async ({email, password}) => {
   if (response.ok) {
     const jsonData = await response.json();
     authToken = jsonData.session.authentication_token;
+    name = `${jsonData.users.first_name} ${jsonData.users.last_name}`;
+
     console.log(authToken);
   } else {
     // TODO: Handle error message from API response
   }
 
   
-  return response.ok;
+  return {
+    authenticated: response.ok,
+    authToken,
+    user: {
+      name
+    }
+  };
 };
 
 Notion.signOut = async () => {

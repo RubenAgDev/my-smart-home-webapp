@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 
 import Nav from './components/Nav';
+import { UserContextProvider, UserContextConsumer } from './components/UserContextProvider';
 
 import Home from './pages/Home/Home';
 import SignIn from './pages/SignIn/SignIn';
@@ -15,52 +16,49 @@ import ErrorPage from './pages/Error/Error';
 
 function App() {
   const [currentNavValue, setCurrentNavValue] = React.useState(0);
-  // TODO: Setting token as env var until auth token is handle in the app state
-  const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(true);
 
   const handleNavChange = (event, newValue) => {
     setCurrentNavValue(newValue);
   };
 
-  const handleSignIn = (success) => {
-    setIsUserLoggedIn(success);
-  };
-
-  const handleSignOut = () => {
-    setIsUserLoggedIn(false);
-  }
-
-  const PrivateRoute = ({ children, path}) => {
+  const PrivateRoute = ({ children, path, isLoggedIn}) => {
     return (
-        <Route path={path}>
-          {isUserLoggedIn ? children : <Redirect to="/sign-in" />}
-        </Route>
+      <Route path={path}>
+        {isLoggedIn ? children : <Redirect to="/sign-in" />}
+      </Route>
     );
   };
 
   return (
-    <Router>
-      <Nav
-        value={currentNavValue}
-        onChange={handleNavChange}
-      />
-      <main>
-        <Switch>
-          <Route path="/sign-in">
-            {isUserLoggedIn ? <Redirect to="/" /> : <SignIn onSignIn={handleSignIn}  />}
-          </Route>
-          <Route path="/sign-out">
-            <SignOut onSignOut={handleSignOut} />
-          </Route>
-          <Route path="/error">
-            <ErrorPage />
-          </Route>
-          <PrivateRoute path="/">
-            <Home />
-          </PrivateRoute>
-        </Switch>
-      </main>
-    </Router>
+    <UserContextProvider>
+      <UserContextConsumer>
+        {userContext => (
+          <Router>
+            <Nav
+              value={currentNavValue}
+              onChange={handleNavChange}
+              userName={userContext.name}
+            />
+            <main>
+              <Switch>
+                <Route path="/sign-in">
+                  {userContext.isLoggedIn ? <Redirect to="/" /> : <SignIn onSignIn={userContext.handleSignIn} />}
+                </Route>
+                <Route path="/sign-out">
+                  {<SignOut onSignOut={userContext.handleSignOut} />}
+                </Route>
+                <Route path="/error">
+                  <ErrorPage />
+                </Route>
+                <PrivateRoute path="/" isLoggedIn={userContext.isLoggedIn}>
+                  <Home />
+                </PrivateRoute>
+              </Switch>
+            </main>
+          </Router>
+        )}
+      </UserContextConsumer>
+    </UserContextProvider>
   );
 }
 
