@@ -5,7 +5,7 @@ const BASE_URL = '/api';
 let authToken = process.env.REACT_APP_AUTH_TOKEN || '';
 
 Notion.signIn = async ({email, password}) => {
-  let name = '';
+  let user = null, error = null;
 
   const response = await fetch(`${BASE_URL}/users/sign_in`, {
     method: 'POST',
@@ -20,23 +20,23 @@ Notion.signIn = async ({email, password}) => {
     }),
   });
 
+  const jsonData = await response.json();
   if (response.ok) {
-    const jsonData = await response.json();
     authToken = jsonData.session.authentication_token;
-    name = `${jsonData.users.first_name} ${jsonData.users.last_name}`;
-
-    console.log(authToken);
+    user = {
+      id: jsonData.users.id,
+      name: `${jsonData.users.first_name} ${jsonData.users.last_name}`,
+      email: jsonData.users.email
+    }
   } else {
-    // TODO: Handle error message from API response
+    error = jsonData.errors[0].title;
   }
 
-  
   return {
     authenticated: response.ok,
     authToken,
-    user: {
-      name
-    }
+    user,
+    error
   };
 };
 
@@ -53,14 +53,22 @@ Notion.signOut = async () => {
     }
   });
 
-  if (response.ok) {
-    authToken = '';
-  } else {
-    // TODO: Handle error message from API response
-  }
+  authToken = '';
 
   return response.ok;
 }
+
+Notion.getUserProfile = async (userId) => {
+  const response = await fetch(`${BASE_URL}/users/${userId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${authToken}`
+    }
+  });
+
+  return response.json();
+};
 
 Notion.getSensors = async () => {
   const response = await fetch(`${BASE_URL}/sensors`, {
@@ -71,7 +79,7 @@ Notion.getSensors = async () => {
     }
   });
 
-  return await response.json();
+  return response.json();
 };
 
 Notion.getSensorTasks = async (sensorId) => {
@@ -83,7 +91,7 @@ Notion.getSensorTasks = async (sensorId) => {
     }
   });
 
-  return await response.json();
+  return response.json();
 }
 
 export default Notion;

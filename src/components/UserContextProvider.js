@@ -5,17 +5,19 @@ import NotionService from '../services/Notion';
 const initialState = {
   authToken: '',
   isLoggedIn: false,
-  name: ''
+  error: '',
+  name: '',
+  email: ''
 }
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'loginUser':
       return {
-        ...state,
         authToken: action.payload.authToken,
         isLoggedIn: action.payload.authenticated,
-        name: action.payload.user.name,
+        error: action.payload.error,
+        ...action.payload.user,
       };
     case 'logoutUser':
       return {
@@ -34,16 +36,18 @@ function UserContextProvider ({children}) {
   const handleSignIn = async(formValues) => {
     try {
       const payload = await NotionService.signIn(formValues);
-      if (payload.authenticated) {
-        return dispatch({
-          type: 'loginUser',
-          payload
-        });
-      } else {
-        return 'Invalid email and/or password';
-      }
+      dispatch({
+        type: 'loginUser',
+        payload
+      });
     } catch (error) {
-      return error.message;
+      dispatch({
+        type: 'loginUser',
+        payload: {
+          ...initialState,
+          error: error.message
+        }
+      });
     }
   };
 

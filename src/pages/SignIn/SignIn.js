@@ -25,8 +25,8 @@ function SignIn({onSignIn}) {
   }
 
   const handleFormSubmit = async () => {
-    const error = await onSignIn(formValues);
-    if(error) {
+    const { error } = await onSignIn(formValues);
+    if(error !== '') {
       handleError(error);
     }
   };

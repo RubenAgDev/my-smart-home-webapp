@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     minHeight: '48px',
   },
-  userName: {
+  loginInfo: {
     position: 'absolute',
     right: '0',
     padding: '0.25em'
@@ -34,7 +34,7 @@ function LinkTab(props) {
   );
 }
 
-function Nav({value, onChange, userName}) {
+function Nav({value, onChange, loginInfo}) {
   const classes = useStyles();
 
   return (
@@ -44,8 +44,8 @@ function Nav({value, onChange, userName}) {
           <LinkTab label="Home" to="/" {...a11yProps(0)} />
           <LinkTab label="Sign Out" to="/sign-out" {...a11yProps(1)} />
         </Tabs>
-        <Typography variant="body2" className={classes.userName}>
-          {userName}
+        <Typography variant="body2" className={classes.loginInfo}>
+          {loginInfo || <LinkTab to="/sign-in" label="Sign In" /> }
         </Typography>
       </Toolbar>
     </AppBar>

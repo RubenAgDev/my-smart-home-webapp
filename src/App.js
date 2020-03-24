@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 
 import Nav from './components/Nav';
+import PrivateRoute from './components/PrivateRoute';
 import { UserContextProvider, UserContextConsumer } from './components/UserContextProvider';
 
 import Home from './pages/Home/Home';
@@ -21,14 +22,6 @@ function App() {
     setCurrentNavValue(newValue);
   };
 
-  const PrivateRoute = ({ children, path, isLoggedIn}) => {
-    return (
-      <Route path={path}>
-        {isLoggedIn ? children : <Redirect to="/sign-in" />}
-      </Route>
-    );
-  };
-
   return (
     <UserContextProvider>
       <UserContextConsumer>
@@ -37,7 +30,7 @@ function App() {
             <Nav
               value={currentNavValue}
               onChange={handleNavChange}
-              userName={userContext.name}
+              loginInfo={userContext.isLoggedIn && `${userContext.name} (${userContext.email})`}
             />
             <main>
               <Switch>

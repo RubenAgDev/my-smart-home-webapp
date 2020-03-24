@@ -1,0 +1,11 @@
+version: '3.4'
+services:
+  web:
+    build: 
+      context: .
+      target: build-stage
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+    command: 'npm run start'
