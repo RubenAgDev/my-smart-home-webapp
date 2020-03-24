@@ -17,7 +17,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:docker": "docker build --rm -t my-smart-home-webapp .",
+    "start:docker": "docker run --rm -p 80:80 my-smart-home-webapp"
   },
   "eslintConfig": {
     "extends": "react-app"
