@@ -42,13 +42,13 @@ function Nav({value, onChange, loginInfo}) {
   return (
     <AppBar position="static">
       <Toolbar className={classes.toolbar}>
+        <NetworkStatus />
         <Tabs value={value} onChange={onChange} aria-label="navigation tabs">
           <LinkTab label="Home" to="/" {...a11yProps(0)} />
           <LinkTab label="Sign Out" to="/sign-out" {...a11yProps(1)} />
         </Tabs>
         <Typography variant="body2" className={classes.loginInfo}>
           {loginInfo || <LinkTab to="/sign-in" label="Sign In" /> }
-          <NetworkStatus />
         </Typography>
       </Toolbar>
     </AppBar>

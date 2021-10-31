@@ -1,24 +1,31 @@
 import React from 'react';
-import SvgIcon from '@mui/material/SvgIcon';
+import Tooltip from '@mui/material/Tooltip';
+import { makeStyles } from '@mui/styles';
+
+import HomeIcon from './HomeIcon';
 import HomeNetwork from '../services/HomeNetwork';
 
-function HomeIcon(props) {
-  return (
-    <SvgIcon {...props}>
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-    </SvgIcon>
-  );
-}
+const useStyles = makeStyles(theme => ({
+  iconContainer: {
+    backgroundColor: 'lightgray',
+    borderRadius: '12px',
+  },
+}));
 
 function NetworkStatus() {
-    const [status, setStatus] = React.useState(null);
-    React.useEffect(() => {
-      HomeNetwork.isOnline()
-        .then(result => setStatus(result))
-    }, [])
-    return (
-      status ? <HomeIcon color="success" /> :  <HomeIcon color="error" />
-    )
+  const classes = useStyles();
+  const [status, setStatus] = React.useState("loading");
+  React.useEffect(() => {
+    HomeNetwork.isOnline()
+      .then(result => setStatus(result ? "success" : "error"))
+  }, [])
+  return (
+    <Tooltip title={`Home Network Connection: ${status}`}>
+      <div className={classes.iconContainer}>
+        <HomeIcon color={status} />
+      </div>
+    </Tooltip>
+  );
 }
 
 export default NetworkStatus;
